@@ -15,23 +15,31 @@ int main(void)
 			break;
 		}
 		buf[bytes] = '\0';
+		/* クオート内外問わず\r\n->\n,\r->\nと変換 */
+		for(p1 = buf; (p2 = strchr(p1, '\r')) != NULL; p1 = p2 + 1)
+		{
+			*p2 = '\n';
+			if(*(p2 + 1) == '\n')
+			{
+				p2++;	/* \r\n->\n */
+			}
+			else if(*(p2 + 1) == '\0')
+			{
+				*p2 = '\0';	/* バッファの区切りで来てしまった場合消去 */
+				break;
+			}
+		}
 		for(p1 = buf; (p2 = strchr(p1, '\'')) != NULL ||
 			(p2 = strchr(p1, '\0')) != NULL; p1 = p2 + 1)
 		{
 			c	= *p2;
 			*p2 = '\0';
 			if(in_quot)
-			{
-				for(p3 = p1; (p4 = strstr(p3, "\r\n")) != NULL ||
-					(p4 = strchr(p3, '\r')) != NULL ||
-					(p4 = strchr(p3, '\n')) != NULL; p3 = p4 + 1)
+			{	/* ここで\nを消去する */
+				for(p3 = p1; (p4 = strchr(p3, '\n')) != NULL; p3 = p4 + 1)
 				{
 					psize = (size_t) p4 - (size_t) p3;
 					fwrite(p3, psize, 1, stdout);
-					if(*p4 == '\r' && *(p4 + 1) == '\n')
-					{
-						p4++;
-					}
 				}
 				fwrite(p3, strlen(p3), 1, stdout);
 			}
