@@ -67,6 +67,9 @@ function read_header_3(&$obj, &$key, &$str, &$val)
 
 //標準入力からメールの生データを読み込んでobjectに展開
 
+//etc/aliasesなどから直接起動する場合カレントを適切な場所に移動すること
+//chdir( "/home/hogeuser" );
+
 $stdin = file_get_contents('php://stdin');
 
 $params = []; //オプションをここで設定（コード変換をお任せ設定）
