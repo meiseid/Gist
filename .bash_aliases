@@ -7,6 +7,7 @@ ulimit -S -c unlimited
 
 alias ll='ls -alF'
 alias lt='ls -ltr'
+alias redis-cli='redis-cli --raw'
 
 # git commit; git push;
 function gco(){
